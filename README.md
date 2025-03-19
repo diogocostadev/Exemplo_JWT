@@ -19,8 +19,8 @@ Este projeto demonstra a implementação de autenticação e autorização usand
 
 1. Clone o repositório:
    ```
-   git clone https://github.com/seu-usuario/JWTDemo.git
-   cd JWTDemo
+   git clone https://github.com/diogocostadev/Exemplo_JWT
+   cd Exemplo_JWT
    ```
 
 2. Restaure os pacotes:
