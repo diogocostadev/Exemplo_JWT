@@ -1,0 +1,50 @@
+@JWT_API_HostAddress = http://localhost:5172
+
+### Autenticação - Login como Admin
+# @name loginAdmin
+POST {{JWT_API_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+### Salvar o token JWT da resposta
+@adminToken = {{loginAdmin.response.body.token}}
+
+### Autenticação - Login como Usuário Regular
+# @name loginUser
+POST {{JWT_API_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "usuario",
+  "password": "senha123"
+}
+
+### Salvar o token JWT da resposta
+@userToken = {{loginUser.response.body.token}}
+
+### Acessar Perfil (protegido) - Usando token Admin
+GET {{JWT_API_HostAddress}}/api/auth/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoidXN1YXJpbyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJleHAiOjE3NDI0MTk5MzIsImlzcyI6IkpXVERlbW8uQVBJIiwiYXVkIjoiSldURGVtby5DbGllbnRzIn0.tsCSyTquDzE06W60Ajpd7ILlion5bIq6WAuzABXspaw
+
+### Acessar Perfil (protegido) - Usando token Usuário
+GET {{JWT_API_HostAddress}}/api/auth/profile
+Authorization: Bearer {{userToken}}
+
+### Acessar Área Admin (admin only) - Usando token Admin
+GET {{JWT_API_HostAddress}}/api/auth/admin
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoidXN1YXJpbyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJleHAiOjE3NDI0MTk5MzIsImlzcyI6IkpXVERlbW8uQVBJIiwiYXVkIjoiSldURGVtby5DbGllbnRzIn0.tsCSyTquDzE06W60Ajpd7ILlion5bIq6WAuzABXspaw
+
+### Acessar Área Admin (admin only) - Usando token Usuário (deve falhar)
+GET {{JWT_API_HostAddress}}/api/auth/admin
+Authorization: Bearer {{userToken}}
+
+### Tentar acessar Perfil sem token (deve falhar)
+GET {{JWT_API_HostAddress}}/api/auth/profile
+
+### Testar com token expirado (adicione um token expirado aqui)
+GET {{JWT_API_HostAddress}}/api/auth/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW4iLCJuYW1laWQiOiIxIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNjQyNTUzMTIzLCJleHAiOjE2NDI1NTY3MjMsImlhdCI6MTY0MjU1MzEyMywiaXNzIjoiSldURGVtby5BUEkiLCJhdWQiOiJKV1REZW1vLkNsaWVudHMifQ.VB2vOFaOEFXAugM4fTbL0-7RvlXJjzL9I-32XcTBJZ4
